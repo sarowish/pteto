@@ -58,17 +58,13 @@ impl Server {
             let mut buffer = Vec::new();
             stream.read_to_end(&mut buffer).unwrap();
             let command: Command = bincode::deserialize(&buffer).unwrap();
-            if let Command::Kill = command {
-                stream
-                    .write(&bincode::serialize(&Output::Kill).unwrap())
-                    .unwrap();
-                stream.flush().unwrap();
-                break;
-            }
-            let i = self.handle_command(command);
-            stream.write(&bincode::serialize(&i).unwrap()).unwrap();
+            let output = self.handle_command(command);
+            stream.write(&bincode::serialize(&output).unwrap()).unwrap();
             stream.flush().unwrap();
             stream.shutdown(Shutdown::Both).unwrap();
+            if let Output::Kill = output {
+                break;
+            }
         }
     }
 

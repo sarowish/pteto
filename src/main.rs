@@ -19,8 +19,8 @@ fn main() {
         .subcommand(App::new("stop"))
         .subcommand(
             App::new("add")
-                .arg(Arg::new("subject").value_name("Subject"))
-                .arg(Arg::new("seconds").value_name("Seconds")),
+                .arg(Arg::new("seconds").value_name("Seconds").required(true))
+                .arg(Arg::new("subject").value_name("Subject")),
         )
         .subcommand(App::new("status"))
         .subcommand(App::new("stats"))
@@ -35,7 +35,7 @@ fn main() {
         let mut client = Client::new();
         if let Some(ref matches) = matches.subcommand_matches("add") {
             client.add(
-                matches.value_of("subject").unwrap().to_string(),
+                matches.value_of("subject").unwrap_or_default().to_string(),
                 matches.value_of("seconds").unwrap().parse().unwrap(),
             )
         } else if matches.is_present("toggle") {

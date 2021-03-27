@@ -101,7 +101,10 @@ impl Server {
         self.add(self.subject.clone(), seconds);
     }
 
-    fn add(&mut self, subject: String, seconds: u32) {
+    fn add(&mut self, mut subject: String, seconds: u32) {
+        if subject.is_empty() {
+            subject = self.subject.clone();
+        }
         self.subjects
             .get_mut(&subject)
             .unwrap()

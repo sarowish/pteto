@@ -1,5 +1,5 @@
 [package]
-name = "study_timer"
+name = "pteto"
 version = "0.1.0"
 authors = ["Berke Enercan <berkeenercan@tutanota.com>"]
 edition = "2018"

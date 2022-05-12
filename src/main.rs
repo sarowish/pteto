@@ -12,7 +12,7 @@ use server::Server;
 use std::env;
 
 fn main() {
-    let matches = App::new("Timer")
+    let matches = App::new("pteto")
         .setting(AppSettings::ColoredHelp)
         .version(crate_version!())
         .subcommand(App::new("toggle"))

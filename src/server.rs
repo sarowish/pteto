@@ -26,7 +26,7 @@ impl Server {
             subjects.insert(subject.clone(), Subject::new(subject));
         }
 
-        let mut file = DatabaseFile::new(PathBuf::from("./times.st"));
+        let mut file = DatabaseFile::new(PathBuf::from("./times.pt"));
         let db = file.open().unwrap();
 
         for entry in db.entries.iter() {

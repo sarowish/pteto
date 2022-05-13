@@ -6,26 +6,25 @@ mod server;
 mod subject;
 mod timer;
 mod utils;
-use clap::{crate_version, App, AppSettings, Arg};
+use clap::{crate_version, Arg, Command};
 use client::Client;
 use server::Server;
 use std::env;
 
 fn main() {
-    let matches = App::new("pteto")
-        .setting(AppSettings::ColoredHelp)
+    let matches = Command::new("pteto")
         .version(crate_version!())
-        .subcommand(App::new("toggle"))
-        .subcommand(App::new("stop"))
+        .subcommand(Command::new("toggle"))
+        .subcommand(Command::new("stop"))
         .subcommand(
-            App::new("add")
+            Command::new("add")
                 .arg(Arg::new("seconds").value_name("Seconds").required(true))
                 .arg(Arg::new("subject").value_name("Subject")),
         )
-        .subcommand(App::new("status"))
-        .subcommand(App::new("stats"))
-        .subcommand(App::new("changesubject").arg(Arg::new("subject").value_name("Subject")))
-        .subcommand(App::new("kill"))
+        .subcommand(Command::new("status"))
+        .subcommand(Command::new("stats"))
+        .subcommand(Command::new("changesubject").arg(Arg::new("subject").value_name("Subject")))
+        .subcommand(Command::new("kill"))
         .get_matches();
     let subject_list = &[];
     if env::args().count() == 1 {
@@ -33,26 +32,28 @@ fn main() {
         server.run();
     } else {
         let mut client = Client::new();
-        if let Some(ref matches) = matches.subcommand_matches("add") {
-            client.add(
-                matches.value_of("subject").unwrap_or_default().to_string(),
-                matches.value_of("seconds").unwrap().parse().unwrap(),
-            )
-        } else if matches.is_present("toggle") {
-            client.toggle();
-        } else if matches.is_present("stop") {
-            client.stop();
-        } else if matches.is_present("status") {
-            println!("{}", client.status());
-        } else if let Some(ref matches) = matches.subcommand_matches("changesubject") {
-            client.change_subject(matches.value_of("subject").unwrap().to_string());
-        } else if matches.is_present("stats") {
-            let subjects = client.stats();
-            for subject in subjects {
-                println!("{}", subject);
+        match matches.subcommand() {
+            Some(("add", sub_matches)) => client.add(
+                sub_matches
+                    .value_of("subject")
+                    .unwrap_or_default()
+                    .to_string(),
+                sub_matches.value_of("seconds").unwrap().parse().unwrap(),
+            ),
+            Some(("toggle", _)) => client.toggle(),
+            Some(("stop", _)) => client.stop(),
+            Some(("status", _)) => println!("{}", client.status()),
+            Some(("changesubject", sub_matches)) => {
+                client.change_subject(sub_matches.value_of("subject").unwrap().to_string())
             }
-        } else if matches.is_present("kill") {
-            client.kill();
+            Some(("stats", _)) => {
+                let subjects = client.stats();
+                for subject in subjects {
+                    println!("{}", subject);
+                }
+            }
+            Some(("kill", _)) => client.kill(),
+            _ => (),
         }
     }
 }

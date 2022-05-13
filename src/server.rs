@@ -59,8 +59,9 @@ impl Server {
             stream.read_to_end(&mut buffer).unwrap();
             let command: Command = bincode::deserialize(&buffer).unwrap();
             let output = self.handle_command(command);
-            stream.write(&bincode::serialize(&output).unwrap()).unwrap();
-            stream.flush().unwrap();
+            stream
+                .write_all(&bincode::serialize(&output).unwrap())
+                .unwrap();
             stream.shutdown(Shutdown::Both).unwrap();
             if let Output::Kill = output {
                 break;

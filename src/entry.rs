@@ -5,22 +5,22 @@ use std::ops::{Deref, DerefMut};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Entry {
-    subject: String,
+    label: String,
     seconds: u32,
     date: NaiveDate,
 }
 
 impl Entry {
-    pub fn new(subject: String, seconds: u32) -> Self {
+    pub fn new(label: String, seconds: u32) -> Self {
         Self {
-            subject,
+            label,
             seconds,
             date: Utc::today().naive_utc(),
         }
     }
 
-    pub fn subject(&self) -> String {
-        self.subject.clone()
+    pub fn label(&self) -> String {
+        self.label.clone()
     }
 
     pub fn seconds(&self) -> u32 {

@@ -1,35 +1,47 @@
 use std::fmt;
 
 pub struct Timer {
-    state: bool,
+    running: bool,
     seconds: u32,
+    pub exceeded: bool,
 }
 
 impl Timer {
-    pub fn new() -> Self {
+    pub fn new(duration: u32) -> Self {
         Timer {
-            state: false,
-            seconds: 0,
+            running: false,
+            seconds: duration,
+            exceeded: false,
         }
     }
 
+    pub fn reset(&mut self, duration: u32) {
+        self.seconds = duration;
+        self.running = false;
+        self.exceeded = false;
+    }
+
     pub fn toggle(&mut self) {
-        self.state = !self.state;
+        self.running = !self.running;
     }
 
     pub fn tick(&mut self) {
-        if self.state {
-            self.seconds += 1;
+        if self.running {
+            if self.exceeded {
+                self.seconds += 1;
+            } else {
+                self.seconds -= 1;
+            }
         }
     }
 
     pub fn stop(&mut self) -> u32 {
-        self.state = false;
+        self.running = false;
         std::mem::take(&mut self.seconds)
     }
 
     pub fn is_running(&self) -> bool {
-        self.state
+        self.running
     }
 
     pub fn seconds(&self) -> u32 {
@@ -49,15 +61,15 @@ mod tests {
 
     #[test]
     fn timer_basic() {
-        let mut timer = Timer::new();
+        let mut timer = Timer::new(30);
         timer.toggle();
         assert!(timer.is_running());
         timer.tick();
         timer.tick();
-        assert_eq!(timer.seconds(), 2);
+        assert_eq!(timer.seconds(), 28);
         let res = timer.stop();
         assert!(!timer.is_running());
         assert_eq!(timer.seconds(), 0);
-        assert_eq!(res, 2);
+        assert_eq!(res, 28);
     }
 }

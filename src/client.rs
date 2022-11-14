@@ -13,8 +13,8 @@ impl Client {
         }
     }
 
-    pub fn add(&mut self, subject: String, seconds: u32) {
-        self.run_command(Command::Add(subject, seconds));
+    pub fn add(&mut self, label: String, seconds: u32) {
+        self.run_command(Command::Add(label, seconds));
     }
 
     pub fn toggle(&mut self) {
@@ -23,6 +23,10 @@ impl Client {
 
     pub fn stop(&mut self) {
         self.run_command(Command::Stop);
+    }
+
+    pub fn take_break(&mut self, long: bool) {
+        self.run_command(Command::Break(long));
     }
 
     pub fn status(&mut self) -> String {
@@ -41,8 +45,8 @@ impl Client {
         }
     }
 
-    pub fn change_subject(&mut self, subject: String) {
-        self.run_command(Command::ChangeSubject(subject));
+    pub fn change_label(&mut self, label: String) {
+        self.run_command(Command::ChangeLabel(label));
     }
 
     pub fn kill(&mut self) {

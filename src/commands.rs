@@ -5,9 +5,10 @@ pub enum Command {
     Add(String, u32),
     Toggle,
     Stop,
+    Break(bool),
     Status,
     Stats,
-    ChangeSubject(String),
+    ChangeLabel(String),
     Kill,
 }
 
@@ -16,8 +17,9 @@ pub enum Output {
     Add,
     Toggle,
     Stop,
+    Break,
     Status(String),
     Stats(Vec<String>),
-    ChangeSubject,
+    ChangeLabel,
     Kill,
 }

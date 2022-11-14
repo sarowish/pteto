@@ -2,6 +2,7 @@ use crate::commands::{Command, Output};
 use crate::database::{Database, DatabaseFile};
 use crate::entry::Entry;
 use crate::session::{Mode, Session};
+use notify_rust::Notification;
 use std::collections::HashMap;
 use std::io::prelude::*;
 use std::net::{Shutdown, TcpListener};
@@ -47,6 +48,7 @@ impl Server {
                 timer.tick();
                 if timer.seconds() == 0 {
                     timer.exceeded = true;
+                    Notification::new().body("pteto: Time is up").show().unwrap();
                 }
             }
         });

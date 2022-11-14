@@ -9,11 +9,11 @@ mod utils;
 use clap::{crate_version, Arg, Command};
 use client::Client;
 use server::Server;
-use std::env;
 
 fn main() {
     let matches = Command::new("pteto")
         .version(crate_version!())
+        .arg(Arg::new("no_daemon").long("no-daemon"))
         .subcommand(Command::new("toggle"))
         .subcommand(Command::new("stop"))
         .subcommand(Command::new("break").arg(Arg::new("long").short('l').long("long")))
@@ -27,8 +27,11 @@ fn main() {
         .subcommand(Command::new("changelabel").arg(Arg::new("label").value_name("Label")))
         .subcommand(Command::new("kill"))
         .get_matches();
-    if env::args().count() == 1 {
+    if matches.subcommand_name().is_none() {
         let mut server = Server::new();
+        if !matches.is_present("no_daemon") {
+            nix::unistd::daemon(true, false).unwrap();
+        }
         server.run();
     } else {
         let mut client = Client::new();

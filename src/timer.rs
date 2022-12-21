@@ -51,7 +51,7 @@ impl Timer {
 
 impl fmt::Display for Timer {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", crate::utils::seconds_to_clock(self.seconds()))
+        write!(f, "{}", crate::utils::length_as_hhmmss(self.seconds()))
     }
 }
 

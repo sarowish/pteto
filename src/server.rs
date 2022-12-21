@@ -180,10 +180,10 @@ impl Server {
             .iter()
             .map(|(label, seconds)| {
                 total += seconds;
-                format!("{} - {}", label, crate::utils::seconds_to_clock(*seconds))
+                format!("{} - {}", label, crate::utils::length_as_hhmmss(*seconds))
             })
             .collect();
-        res.push(format!("Total - {}", crate::utils::seconds_to_clock(total)));
+        res.push(format!("Total - {}", crate::utils::length_as_hhmmss(total)));
         res
     }
 }

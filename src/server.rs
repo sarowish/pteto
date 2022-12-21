@@ -142,7 +142,7 @@ impl Server {
         *time += seconds;
 
         self.database.entries.push(Entry::new(label, seconds));
-        self.database.modified = true;
+        self.database.save()
     }
 
     fn change_label(&mut self, label: String) {

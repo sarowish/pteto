@@ -6,27 +6,17 @@ use std::path::PathBuf;
 
 pub struct Database {
     pub entries: Entries,
-    pub modified: bool,
     path: PathBuf,
 }
 
 impl Database {
     pub fn save(&mut self) {
-        if !self.modified {
-            return;
-        }
         let mut file = match fs::OpenOptions::new().write(true).open(self.path.clone()) {
             Ok(file) => file,
             Err(e) if e.kind() == io::ErrorKind::NotFound => fs::File::create(&self.path).unwrap(),
             Err(e) => panic!("{:?}", e),
         };
         file.write_all(&self.entries.to_bytes().unwrap()).unwrap();
-    }
-}
-
-impl Drop for Database {
-    fn drop(&mut self) {
-        self.save();
     }
 }
 
@@ -54,7 +44,6 @@ impl DatabaseFile {
         };
         Ok(Database {
             entries,
-            modified: false,
             path: self.file_path.clone(),
         })
     }

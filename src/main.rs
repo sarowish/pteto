@@ -47,9 +47,12 @@ fn main() {
             Some(("stop", _)) => client.stop(),
             Some(("break", sub_matches)) => client.take_break(sub_matches.is_present("long")),
             Some(("status", _)) => println!("{}", client.status()),
-            Some(("changelabel", sub_matches)) => {
-                client.change_label(sub_matches.value_of("label").unwrap().to_string())
-            }
+            Some(("changelabel", sub_matches)) => client.change_label(
+                sub_matches
+                    .value_of("label")
+                    .unwrap_or("Unlabelled")
+                    .to_string(),
+            ),
             Some(("stats", _)) => {
                 let labels = client.stats();
                 for label in labels {
